@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 import Navbar from "./components/Navbar";
@@ -18,6 +18,15 @@ function App() {
   const toggleMenu = () => {
     setIsCollapsed((prev) => !prev);
   };
+
+  // TODO: Test CSP
+  useEffect(() => {
+    try {
+      eval("console.log('should not run')");
+    } catch (e) {
+      console.error("Eval blocked by CSP:", e);
+    }
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100">
