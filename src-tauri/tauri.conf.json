@@ -10,11 +10,14 @@
     "frontendDist": "../dist"
   },
   "app": {
+    "withGlobalTauri": false,
     "windows": [
       {
         "title": "settly",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "center": true,
+        "resizable": true
       }
     ],
     "security": {
@@ -24,7 +27,8 @@
         "style-src": " 'self' 'unsafe-inline'",
         "connect-src": "ipc: http://ipc.localhost",
         "img-src": "'self' asset: http://asset.localhost blob: data:"
-      }
+      },
+      "capabilities": ["default"]
     }
   },
   "bundle": {
