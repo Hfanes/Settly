@@ -6,6 +6,7 @@ import { HotkeysProvider } from "react-hotkeys-hook";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Files from "./pages/Files";
 import Home from "./pages/Home";
+import UploadPage from "./pages/UploadPage";
 
 // Prevent FOUC by applying theme immediately
 // Flash of Unstyled Content
@@ -34,6 +35,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
             <Route path="/" element={<App />}>
               <Route index element={<Home />} />
               <Route path="files" element={<Files />} />
+              <Route path="upload" element={<UploadPage />} />
               {/* <Route path="*" element={}/> */}
             </Route>
           </Routes>
