@@ -23,10 +23,15 @@ import {
 import { Progress } from "@radix-ui/react-progress";
 import { Link } from "react-router";
 import { useSettingsStore } from "../store/useSettingsStore";
+import { invoke } from "@tauri-apps/api/core";
+
+type FileInfo = { name: string; size: number; modified: number };
 
 export default function Files() {
   const [query, setQuery] = useState("");
+  const [files, setFiles] = useState<FileInfo[]>([]);
   const folderPath = useSettingsStore((state) => state.folderPath);
+  const fileCount = files.length;
   // const [filteredProjects, setFilteredProjects] = useStat(myProjects);
   // const projectsNumber = myProjects.length;
 
@@ -36,6 +41,29 @@ export default function Files() {
   //   );
   //   setFilteredProjects(filtered);
   // }, [query, myProjects]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const filesGet = await invoke<FileInfo[]>("list_files_in_folder");
+      setFiles(filesGet);
+      console.log(filesGet);
+    };
+
+    fetchData();
+  }, []);
+
+  const formatBytes = (bytes: number) => {
+    if (bytes === 0) return "0 Bytes";
+    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    const value = bytes / Math.pow(1024, i);
+    return `${value.toFixed(2)} ${sizes[i]}`;
+  };
+
+  function formatDate(unixTimestamp: number): string {
+    const date = new Date(unixTimestamp * 1000); //  seconds to milliseconds
+    return date.toLocaleString();
+  }
 
   return (
     <div className="w-full mx:auto">
@@ -73,7 +101,7 @@ export default function Files() {
         <div className="flex items-center gap-4 bg-neutral-100 dark:text-black rounded-md w-full px-2 py-1">
           <div className="bg-white p-2 rounded-md flex items-center justify-between w-full">
             <div>All Files</div>
-            <div>12</div>
+            <div>{fileCount}</div>
           </div>
           <div className="bg-white p-2 rounded-md flex items-center justify-between w-full">
             <div>Identification</div>
@@ -84,27 +112,32 @@ export default function Files() {
             <div>2</div>
           </div>
         </div>
-        <Card className="w-full">
-          <CardContent className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <FileText />
-              <div className="flex flex-col">
-                <div>passport-scan.pdf</div>
-                <div className="text-xs">
-                  Identification • 2.4 MB • 2024-01-15
+        {files.map((file) => (
+          <Card className="w-full">
+            <CardContent className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <FileText />
+                <div className="flex flex-col">
+                  <div>{file.name}</div>
+                  <div className="text-xs">
+                    <span>Identification</span>
+                    <span> • {formatBytes(file.size)}</span>
+                    <span> • {formatDate(file.modified)}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex items-center justify-between gap-3">
-              <div className="px-2 py-0.5 rounded-xl bg-black text-white text-xs">
-                verified
+              <div className="flex items-center justify-between gap-3">
+                <div className="px-2 py-0.5 rounded-xl bg-black text-white text-xs">
+                  verified
+                </div>
+                <Eye className="h-4 w-4" />
+                <Download className="h-4 w-4" />
+                <Trash2 className="h-4 w-4" />
               </div>
-              <Eye className="h-4 w-4" />
-              <Download className="h-4 w-4" />
-              <Trash2 className="h-4 w-4" />
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ))}
+
         <Card className="w-full">
           <CardHeader>
             <CardTitle>Storage Usage</CardTitle>

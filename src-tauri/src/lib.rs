@@ -36,7 +36,7 @@ pub fn run() {
             commands::set_folder_path,
             commands::get_folder_path,
             commands::copy_file_from_state,
-            commands::restart_app
+            commands::list_files_in_folder
         ])         
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
