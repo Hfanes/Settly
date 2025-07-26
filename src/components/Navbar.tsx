@@ -54,7 +54,7 @@ export default function Navbar(props: NavbarProps) {
               </Link>
             </li>
             <li className="cursor-pointer">
-              <Link to="/">
+              <Link to="/upload">
                 <FileUp size={20} />
               </Link>
             </li>
@@ -114,7 +114,10 @@ export default function Navbar(props: NavbarProps) {
                 </Link>
               </li>
               <li>
-                <Link to="/" className="flex items-center gap-2 cursor-pointer">
+                <Link
+                  to="/upload"
+                  className="flex items-center gap-2 cursor-pointer"
+                >
                   <FileUp size={22} />
                   Upload Files
                 </Link>
